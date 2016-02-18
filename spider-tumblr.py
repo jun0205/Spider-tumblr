@@ -70,16 +70,17 @@ def getData(client, url, type, resKey):
         #获取post的数据
         for posts in _resource["posts"]:
             #获取资源
-            for ele in posts[resKey]:
-                _resURL = ele["original_size"]["url"]
+            #for ele in posts[resKey]:
+            try:
+                _resURL = posts["video_url"]
                 _fileName = _resURL.split("/")[-1]
                 print "get Resource:%s" % _resURL
-                try:
-                    _rawData = requests.get(_resURL, stream=True).content
-                    with file(STOREPATH + _fileName, "wb") as _rFile:
-                        _rFile.write(_rawData)
-                except Exception, e:
-                    print "Spider Exception:%s" % str(e)
+
+                _rawData = requests.get(_resURL, stream=True).content
+                with file(STOREPATH + _fileName, "wb") as _rFile:
+                    _rFile.write(_rawData)
+            except Exception, e:
+                print "Spider Exception:%s" % str(e)
 
 
 #获取资源
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     if not os.path.exists(STOREPATH):
         os.mkdir(STOREPATH)
 
-    _flArr = getResource()
+    _flArr = getResource("video","trail")
     raw_input()
 
 
